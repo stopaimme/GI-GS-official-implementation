@@ -12,15 +12,15 @@ Abstract: *We present GI-GS, a novel inverse rendering framework that leverages 
 
 ## Decompositon Results
 
-<p align="center">
-    <video src="static/teaser.mp4">
-</p>
-<p align="center">
-    <video src="static/garden.mp4">
-</p>
-<p align="center">
-    <video src="static/lego.mp4">
-</p>
+<video id="teaser" autoplay="" muted="" loop="" playsinline="" height="100%">
+        <source src="./static/teaser.mp4" type="video/mp4">
+</video>
+<video id="teaser" autoplay="" muted="" loop="" playsinline="" height="100%">
+        <source src="./static/garden.mp4" type="video/mp4">
+</video>
+<video id="teaser" autoplay="" muted="" loop="" playsinline="" height="100%">
+        <source src="./static/lego.mp4" type="video/mp4">
+</video>
 
 
 ## Pipeline
