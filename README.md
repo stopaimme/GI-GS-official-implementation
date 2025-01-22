@@ -1,10 +1,11 @@
 # GI-GS: Global Illumination Decomposition on Gaussian Splatting for Inverse Rendering
 
+### **⭐ All code will be released before 27 Jan.**
+
 [**Paper**](https://arxiv.org/abs/2410.02619) | [**Project Page**](https://stopaimme.github.io/GI-GS/) 
 
 Official implementation of GI-GS: Global Illumination Decomposition on Gaussian Splatting for Inverse Rendering
 
-<font color=blue> **All code will be released before 27 Jan. **</font>
 
 Hongze Chen, Zehong Lin, Jun Zhang.
 
