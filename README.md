@@ -27,7 +27,7 @@ cd GI-GS
 
 ```sh
 conda env create --file environment.yml
-conda activate gsir
+conda activate GI-GS
 
 cd submodules
 
