@@ -10,9 +10,7 @@
   <img width="100%" src="assets/pipeline.png"/>
 </p>
 
-<p align="center">
-  <video width="100%" src="assets/teaser.mp4"/>
-</p>
+https://github.com/user-attachments/assets/632ebe65-57c3-4757-97d5-6f373034b5da
 
 We present GI-GS, a novel inverse rendering framework that leverages 3D Gaussian Splatting (3DGS) and deferred shading to achieve photo-realistic novel view synthesis and relighting. In our framework, we first render a G-buffer to capture the detailed geometry and material properties of the scene. Then, we perform physically-based rendering (PBR) only for direct lighting. With the G-buffer and previous rendering results, the indirect lighting can be calculated through a lightweight path tracing. Our method effectively models indirect lighting under any given lighting conditions, thereby achieving better novel view synthesis and relighting. Quantitative and qualitative results show that our GI-GS outperforms existing baselines in both rendering quality and efficiency.
 
