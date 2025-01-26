@@ -42,7 +42,7 @@ cd ./diff-gaussian-rasterization && python setup.py develop && cd ../..
 
 ## Dataset
 
-You can find the [Mip-NeRF 360](https://jonbarron.info/mipnerf360/) and [TensoIR-Synthetic](https://zenodo.org/records/7880113#.ZE68FHZBz18) datasets from the link provided by the paper author. And the authors of TensoIR have provided the environment maps in this [link](https://drive.google.com/file/d/10WLc4zk2idf4xGb6nPL43OXTTHvAXSR3/view).
+You can find the [Mip-NeRF 360](https://jonbarron.info/mipnerf360/) and [TensoIR-Synthetic](https://zenodo.org/records/7880113#.ZE68FHZBz18) datasets from the link provided by the paper authors. And the authors of TensoIR have provided the environment maps in this [link](https://drive.google.com/file/d/10WLc4zk2idf4xGb6nPL43OXTTHvAXSR3/view).
 
 ## Running
 
@@ -79,7 +79,7 @@ python train.py \
 - step → path tracing steps
 - start → path tracing starting point
 
-You can change the radius, bias, thick, delta, step, step ,start to achieve different indirect illumination and occlusion. For the precise meanings, please refer to [forward.cu (line 635-910)](https://drive.google.com/file/d/10WLc4zk2idf4xGb6nPL43OXTTHvAXSR3/view)
+You can change the radius, bias, thick, delta, step, step ,start to achieve different indirect illumination and occlusion. For the precise meanings, please refer to [forward.cu (line 635-910)](https://github.com/stopaimme/GI-GS/blob/master/submodules/diff-gaussian-rasterization/cuda_rasterizer/forward.cu)
 
 
 
