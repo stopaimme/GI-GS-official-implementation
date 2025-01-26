@@ -79,7 +79,7 @@ python train.py \
 - step → path tracing steps
 - start → path tracing starting point
 
-You can change the radius, bias, thick, delta, step, step ,start to achieve different indirect illumination and occlusion. For the precise meanings, please refer to 
+You can change the radius, bias, thick, delta, step, step ,start to achieve different indirect illumination and occlusion. For the precise meanings, please refer to [forward.cu (line 635-910)](https://drive.google.com/file/d/10WLc4zk2idf4xGb6nPL43OXTTHvAXSR3/view)
 
 
 
