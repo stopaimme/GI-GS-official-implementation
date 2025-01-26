@@ -1,37 +1,240 @@
 # GI-GS: Global Illumination Decomposition on Gaussian Splatting for Inverse Rendering
 
-### **⭐ All code will be released before 27 Jan.**
+##### Hongze Chen, [Zehong Lin](https://zhlinup.github.io/), [Jun Zhang](https://eejzhang.people.ust.hk/).
 
-[**Paper**](https://arxiv.org/abs/2410.02619) | [**Project Page**](https://stopaimme.github.io/GI-GS/) 
+#### [**Paper**](https://arxiv.org/abs/2410.02619) | [**Project Page**](https://stopaimme.github.io/GI-GS/) 
 
-Official implementation of GI-GS: Global Illumination Decomposition on Gaussian Splatting for Inverse Rendering
+## Overview
 
-
-Hongze Chen, Zehong Lin, Jun Zhang.
-
-
-Abstract: *We present GI-GS, a novel inverse rendering framework that leverages 3D Gaussian Splatting (3DGS) and deferred shading to achieve photo-realistic novel view synthesis and relighting. In inverse rendering, accurately modeling the shading processes of objects is essential for achieving high-fidelity results. Therefore, it is critical to incorporate global illumination to account for indirect lighting that reaches an object after multiple bounces across the scene. Previous 3DGS-based methods have attempted to model indirect lighting by characterizing indirect illumination as learnable lighting volumes or additional attributes of each Gaussian, while using baked occlusion to represent shadow effects. These methods, however, fail to accurately model the complex physical interactions between light and objects, making it impossible to construct realistic indirect illumination during relighting. To address this limitation, we propose to calculate indirect lighting using efficient path tracing with deferred shading. In our framework, we first render a G-buffer to capture the detailed geometry and material properties of the scene. Then, we perform physically-based rendering (PBR) only for direct lighting. With the G-buffer and previous rendering results, the indirect lighting can be calculated through a lightweight path tracing. Our method effectively models indirect lighting under any given lighting conditions, thereby achieving better novel view synthesis and relighting. Quantitative and qualitative results show that our GI-GS outperforms existing baselines in both rendering quality and efficiency.*
-
-## Decompositon Results
-https://github.com/user-attachments/assets/dccac60d-6cd4-4359-a73c-0766f41390d1
-
-https://github.com/user-attachments/assets/0b2c6caf-d218-472c-8463-d522cb4a4878
-
-https://github.com/user-attachments/assets/e4e64fb0-ce50-4903-b71a-0202f0c44906
-
-## Pipeline
-
-Overview of GI-GS. GI-GS takes input a set of pretrianed 3D Gaussians, each with a normal attribute. It first rasterizes the scene geometry and materials into a G-buffer. Next, it incorporatesa differentiable PBR pipeline to obtain the rendering result under direct lighting and performs path tracing to model the occlusion. Finally, it employs differentiable ray tracing to calculate indirect lighting from the scene geometry and the previous rendering result. The final rendered image is a fusion of the first-pass and second-pass results and uses the ground truth image for supervision.
 <p align="center">
-    <img src="static/pipeline.png">
+  <img width="100%" src="assets/pipeline.png"/>
 </p>
 
+<p align="center">
+  <video width="100%" src="assets/teaser.mp4"/>
+</p>
+
+We present GI-GS, a novel inverse rendering framework that leverages 3D Gaussian Splatting (3DGS) and deferred shading to achieve photo-realistic novel view synthesis and relighting. In our framework, we first render a G-buffer to capture the detailed geometry and material properties of the scene. Then, we perform physically-based rendering (PBR) only for direct lighting. With the G-buffer and previous rendering results, the indirect lighting can be calculated through a lightweight path tracing. Our method effectively models indirect lighting under any given lighting conditions, thereby achieving better novel view synthesis and relighting. Quantitative and qualitative results show that our GI-GS outperforms existing baselines in both rendering quality and efficiency.
+
+## Installation
+
+1. Clone the repo
+
+```sh
+git clone https://github.com/stopaimme/GI-GS.git --recursive
+cd GI-GS
+```
+
+2. Create the environment
+
+```sh
+conda env create --file environment.yml
+conda activate gsir
+
+cd submodules
+
+git clone https://github.com/NVlabs/nvdiffrast
+pip install ./nvdiffrast
+
+pip install ./simple-knn
+cd ./diff-gaussian-rasterization && python setup.py develop && cd ../..
+```
+
+## Dataset
+
+You can find the [Mip-NeRF 360](https://jonbarron.info/mipnerf360/) and [TensoIR-Synthetic](https://zenodo.org/records/7880113#.ZE68FHZBz18) datasets from the link provided by the paper author. And the authors of TensoIR have provided the environment maps in this [link](https://drive.google.com/file/d/10WLc4zk2idf4xGb6nPL43OXTTHvAXSR3/view).
+
+## Running
+
+The training scripts heavily rely on the code provided by [GS-IR](https://github.com/lzhnb/GS-IR). Thanks for its great work!
+
+### TensoIR-Synthetic
+
+Take the `lego` case as an example.
+
+```sh
+python train.py \
+-m outputs/lego/ \
+-s datasets/TensoIR/lego/ \
+--iterations 35000 \
+--eval \
+--gamma \
+--radius 0.8 \
+--bias 0.01 \
+--thick 0.05 \
+--delta 0.0625 \
+--step 16 \
+--start 64 \
+--indirect
+```
+> set `--gamma` to enable **linear_to_sRGB** will cause *better relighting results* but *worse novel view synthesis results*
+> set `--indirect` to enable indirect illumination modelling 
+
+**Global illumination settings**
+
+- radius →  path tracing range
+- bias → ensure ray hit the surface
+- thick → thickness of the surface
+- delta → angle interval to control the num-sample
+- step → path tracing steps
+- start → path tracing starting point
+
+You can change the radius, bias, thick, delta, step, step ,start to achieve different indirect illumination and occlusion. For the precise meanings, please refer to 
 
 
 
+**Evaluation (Novel View Synthesis)**
+
+```sh
+python render.py \
+-m outputs/lego \
+-s datasets/TensoIR/lego/ \
+--checkpoint outputs/lego/chkpnt35000.pth \
+--eval \
+--skip_train \
+--pbr \
+--gamma \
+--indirect
+```
+
+**Evaluation (Normal)**
+
+```sh
+python normal_eval.py \
+--gt_dir datasets/TensoIR/lego/ \
+--output_dir outputs/lego/test/ours_None
+```
+
+**Evaluation (Albedo)**
+
+```sh
+python render.py \
+-m outputs/lego \
+-s datasets/TensoIR/lego/ \
+--checkpoint outputs/lego/chkpnt35000.pth \
+--eval \
+--skip_train \
+--brdf_eval
+```
+
+**Relighting**
+
+```sh
+python relight.py \
+-m outputs/lego \
+-s datasets/TensoIR/lego/ \
+--checkpoint outputs/lego/chkpnt35000.pth \
+--hdri datasets/TensoIR/Environment_Maps/high_res_envmaps_2k/bridge.hdr \
+--eval \
+--gamma
+```
+
+> set `--gamma` to enable **linear_to_sRGB** will cause better relighting results but worse novel view synthesis results
+
+**Relighting Evaluation**
+
+```sh
+python relight_eval.py \
+--output_dir outputs/lego/test/ours_None/relight/ \
+--gt_dir datasets/TensoIR/lego/
+```
+
+### Mip-NeRF 360
+
+Take the `bicycle` case as an example.
+
+**Stage1 (Initial Stage)**
+
+```sh
+python train.py \
+-m outputs/bicycle/ \
+-s datasets/nerf_real_360/bicycle/ \
+--iterations 30000 \
+-i images_4 \
+-r 1 \
+--eval
+```
+
+> `-i images_4` for outdoor scenes and `-i images_2` for indoor scenes
+> `-r 1` for resolution scaling (not rescale)
+
+**Baking**
+
+```sh
+python baking.py \
+-m outputs/bicycle/ \
+--checkpoint outputs/bicycle/chkpnt30000.pth \
+--bound 16.0 \
+--occlu_res 256 \
+--occlusion 0.4
+```
+
+**Stage2 (Decomposition Stage)**
+
+```sh
+python train.py \
+-m outputs/bicycle \
+-s datasets/nerf_real_360/bicycle/ \
+--iterations 40000 \
+-i images_4 \
+-r 1 \
+--eval \
+--metallic \
+--radius 0.8 \
+--bias 0.01 \
+--thick 0.05 \
+--delta 0.0625 \
+--step 16 \
+--start 64 \
+--indirect
+```
+
+> set `--metallic` choose to reconstruct metallicness
+> set `--gamma` to enable **linear_to_sRGB** will cause better relighting results but worse novel view synthesis results
+> set `--indirect` to enable indirect illumination modelling
+
+**Evaluation**
+
+```sh
+python render.py \
+-m outputs/bicycle \
+-s datasets/nerf_real_360/bicycle/ \
+--checkpoint outputs/bicycle/chkpnt40000.pth \
+-i images_4 \
+-r 1 \
+--eval \
+--skip_train \
+--pbr \
+--metallic \
+--indirect
+```
+
+> set `--gamma` to enable **linear_to_sRGB** will cause better relighting results but worse novel view synthesis results
+
+**Relighting**
+
+```sh
+python relight.py \
+-m outputs/bicycle \
+-s datasets/nerf_real_360/bicycle/ \
+--checkpoint outputs/bicycle/chkpnt40000.pth \
+--hdri datasets/TensoIR/Environment_Maps/high_res_envmaps_2k/bridge.hdr \
+--eval \
+--gamma
+```
+
+> set `--gamma` to enable **linear_to_sRGB** will cause better relighting results but worse novel view synthesis results
+
+## Acknowledge
+
+- [GS-IR](https://github.com/lzhnb/GS-IR) (Provides framework)⭐
+- [gaussian-splatting](https://github.com/graphdeco-inria/gaussian-splatting)
+- [nvdiffrast](https://github.com/NVlabs/nvdiffrast)
+- [nvdiffrec](https://github.com/NVlabs/nvdiffrec)
 
 
-## BibTeX
+
+## Citation
 
 ```bibtex
 @misc{chen2024gigsglobalilluminationdecomposition,
