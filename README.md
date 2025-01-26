@@ -77,7 +77,7 @@ python train.py \
 - step → path tracing steps
 - start → path tracing starting point
 
-You can change the radius, bias, thick, delta, step, step ,start to achieve different indirect illumination and occlusion. For the precise meanings, please refer to [forward.cu (line 635-910)](https://github.com/stopaimme/GI-GS/blob/master/submodules/diff-gaussian-rasterization/cuda_rasterizer/forward.cu)
+You can change the radius, bias, thick, delta, step, step ,start to achieve different indirect illumination and occlusion. For the precise meanings, please refer to [forward.cu (line 635-910)](https://github.com/stopaimme/GI-GS/blob/master/submodules/diff-gaussian-rasterization/cuda_rasterizer/forward.cu).
 
 
 
@@ -235,13 +235,10 @@ python relight.py \
 ## Citation
 
 ```bibtex
-@misc{chen2024gigsglobalilluminationdecomposition,
+@inproceedings{chen2025gigs,
       title={GI-GS: Global Illumination Decomposition on Gaussian Splatting for Inverse Rendering}, 
       author={Hongze Chen and Zehong Lin and Jun Zhang},
-      year={2024},
-      eprint={2410.02619},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2410.02619}, 
+      booktitle={ICLR},
+      year={2025},
 }
 ```

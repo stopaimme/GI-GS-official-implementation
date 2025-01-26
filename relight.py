@@ -224,13 +224,9 @@ def render_set(
 
         (IRR, _) = SSR(out_normal_view, depth_pos, linear_rgb, albedo_map, roughness_map, metallic_map, F0)
         IRR = linear_to_srgb(IRR)
-        render_rgb = render_direct
-        render_rgb = linear_to_srgb(render_direct)
-        background = torch.tensor([0, 0, 0], dtype=torch.float32, device="cuda")
-        render_rgb = (render_rgb * alpha_mask + background[:, None, None] * (1.0 - alpha_mask)).clamp(0.0, 1.0)
-
-
-        # render_rgb = render_rgb * alpha_mask
+        IRR = kornia.filters.median_blur(IRR[None, ...], (3, 3))[0]
+        render_rgb = render_direct + IRR
+        render_rgb = render_rgb * alpha_mask
 
         torchvision.utils.save_image(
             render_rgb, os.path.join(relight_path, f"{idx:05d}_{light_name}.png")
