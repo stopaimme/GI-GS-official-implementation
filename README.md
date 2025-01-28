@@ -50,6 +50,8 @@ The training scripts heavily rely on the code provided by [GS-IR](https://github
 
 Take the `lego` case as an example.
 
+**Training**
+
 ```sh
 python train.py \
 -m outputs/lego/ \
@@ -141,33 +143,7 @@ python relight_eval.py \
 
 Take the `bicycle` case as an example.
 
-**Stage1 (Initial Stage)**
-
-```sh
-python train.py \
--m outputs/bicycle/ \
--s datasets/nerf_real_360/bicycle/ \
---iterations 30000 \
--i images_4 \
--r 1 \
---eval
-```
-
-> `-i images_4` for outdoor scenes and `-i images_2` for indoor scenes
-> `-r 1` for resolution scaling (not rescale)
-
-**Baking**
-
-```sh
-python baking.py \
--m outputs/bicycle/ \
---checkpoint outputs/bicycle/chkpnt30000.pth \
---bound 16.0 \
---occlu_res 256 \
---occlusion 0.4
-```
-
-**Stage2 (Decomposition Stage)**
+**Training**
 
 ```sh
 python train.py \
@@ -184,9 +160,13 @@ python train.py \
 --delta 0.0625 \
 --step 16 \
 --start 64 \
+--degree 3 \
 --indirect
 ```
 
+> `-i images_4` for outdoor scenes and `-i images_2` for indoor scenes
+> `-r 1` for resolution scaling (not rescale) 
+> `-degree 3` for bicycle, flowers, stump and `-degree 1` for garden, treehill and indoor scenes. We find that set SH_degree to 1 can achieve better geometry.  																	
 > set `--metallic` choose to reconstruct metallicness
 > set `--gamma` to enable **linear_to_sRGB** will cause better relighting results but worse novel view synthesis results
 > set `--indirect` to enable indirect illumination modelling
