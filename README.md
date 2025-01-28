@@ -67,7 +67,7 @@ python train.py \
 --start 64 \
 --indirect
 ```
-> set `--gamma` to enable **linear_to_sRGB** will cause *better relighting results* but *worse novel view synthesis results*
+> set `--gamma` to enable **linear_to_sRGB** will cause *better relighting results* but *worse novel view synthesis results*  
 > set `--indirect` to enable indirect illumination modelling 
 
 **Global illumination settings**
@@ -164,12 +164,13 @@ python train.py \
 --indirect
 ```
 
-> `-i images_4` for outdoor scenes and `-i images_2` for indoor scenes
-> `-r 1` for resolution scaling (not rescale) 
-> `-degree 3` for bicycle, flowers, stump and `-degree 1` for garden, treehill and indoor scenes. We find that set SH_degree to 1 can achieve better geometry.  																	
-> set `--metallic` choose to reconstruct metallicness
-> set `--gamma` to enable **linear_to_sRGB** will cause better relighting results but worse novel view synthesis results
-> set `--indirect` to enable indirect illumination modelling
+> `-i images_4` for outdoor scenes and `-i images_2` for indoor scenes  
+> `-r 1` for resolution scaling (not rescale)  
+> `-degree 3` for bicycle, flowers, stump and `-degree 1` for garden, treehill and indoor scenes. We find that set SH_degree to 1 can achieve better geometry.  
+> set `--metallic` choose to reconstruct metallicness  
+> set `--gamma` to enable **linear_to_sRGB** will cause better relighting results but worse novel view synthesis results  
+> set `--indirect` to enable indirect illumination modelling  
+
 
 **Evaluation**
 
